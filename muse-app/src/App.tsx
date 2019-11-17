@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import * as webmidi from "webmidi";
+import webmidi from "webmidi";
 
 enum Mode {
   WAIT,
@@ -38,32 +38,36 @@ class App extends React.Component<{}, State> {
       midi: [],
       noteCounter: 0,
     };
+    webmidi.enable(function (err) {
+      if (err) {
+        console.log("webmidi could not be enabled.", err);
+      } else {
+        console.log("webmidi was enabled");
+      }
+    });
   }
 
   generateMidi = () => {
     //create an array of eight random frequencies
-    let noteArray = new Array(8);
+    let midiNotes = new Array(8);
     for (var i = 0; i < 8; i++) {
       //generate MIDI number between 36 & 84 (C2 thru C6)
-      noteArray[i] = Math.floor(Math.random() * 84) + 36;
+      midiNotes[i] = Math.floor(Math.random() * 84) + 36;
     }
 
-    return noteArray;
+    return midiNotes;
   };
 
-  playMidi = (midi: number[]) => {
-    WebMidi.enable(function (err) {
-      if (err) {
-        console.log("WebMidi could not be enabled.", err);
-      } else {
-        console.log(WebMidi.outputs[0]);
-        let output = WebMidi.outputs[0];
-        for (var i = 0; i < noteArray.length; i++){
-          // Change this to have a delay and duration
-          output.playNote(noteArray[i]);
-        }
-      }
-    });
+  playMidi = (midiNotes: number[]) => {
+    let output = webmidi.outputs[0];
+    console.log(output);
+    console.log("Play Midi");
+    output.playNote("C4");
+    //for (var i = 0; i < midiNotes.length; i++) {
+    //  // Change this to have a delay and duration
+    //  console.log(midiNotes[i]);
+    //  output.playNote("C4");
+    //}
   };
 
   handlePlayClick: any = () => {
