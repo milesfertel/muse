@@ -8,10 +8,6 @@ const App: React.FC = () => {
     
     let context = new AudioContext();
     let osc = context.createOscillator();
-    
-    //rn sets frequency to 440Hz
-    osc.frequency.setTargetAtTime(440, context.currentTime, 0);
-    osc.connect(context.destination);
 
     //create an array of eight random frequencies
     let noteArray = new Array(8);
