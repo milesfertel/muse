@@ -1,18 +1,52 @@
 import React from 'react';
+import WebMidi from 'webmidi';
 import logo from './logo.svg';
 import './App.css';
 
 const App: React.FC = () => {
   const generateMidi = (() => {
-    return;
+    
+    let context = new AudioContext();
+    let osc = context.createOscillator();
+    
+    //rn sets frequency to 440Hz
+    osc.frequency.setTargetAtTime(440, context.currentTime, 0);
+    osc.connect(context.destination);
+
+    //create an array of eight random frequencies
+    let noteArray = new Array(8);
+    for (var i = 0; i < 8; i++) {
+      //generate MIDI number between 36 & 84 (C2 thru C6)
+      noteArray[i] = Math.floor(Math.random() * 84) + 36;
+      //convert note identifier to frequency
+      noteArray[i] = Math.pow(2, (noteArray[i]-69)/12)*440;
+    }
+    
+    return noteArray;
   });
 
   const playMidi = (() => {
+    let noteArray = generateMidi();
+    WebMidi.enable(function (err) {
+
+      if (err) {
+        console.log("WebMidi could not be enabled.", err);
+      } else {
+        console.log(WebMidi.outputs[0]);
+        let output = WebMidi.outputs[0];
+        for (var i = 0; i < noteArray.length; i++){
+          output.playNote(noteArray[i]);
+        }
+      }
+      
+    });
+
     return;
   });
 
   const handlePlayClick  = (() => {
     console.log("helloooooo");
+    playMidi();
   });
 
   return (
