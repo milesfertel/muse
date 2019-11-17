@@ -2,8 +2,6 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import webmidi from "webmidi";
-
 enum Mode {
   WAIT,
   LISTEN,
@@ -38,13 +36,6 @@ class App extends React.Component<{}, State> {
       midi: [],
       noteCounter: 0,
     };
-    webmidi.enable(function (err) {
-      if (err) {
-        console.log("webmidi could not be enabled.", err);
-      } else {
-        console.log("webmidi was enabled");
-      }
-    });
   }
 
   generateMidi = () => {
@@ -64,8 +55,7 @@ class App extends React.Component<{}, State> {
     
     for (var i = 0; i < midi.length; i++) {
       //change MIDI note to frequency
-      console.log(Math.pow(2, (midi[i]-69)/12) * 440);
-      osc.frequency.setValueAtTime(Math.pow(2, (midi[i]-69)/12) * 440, context.currentTime + i);
+      osc.frequency.setValueAtTime(Math.pow(2, (midi[i] - 69)/12) * 440, context.currentTime + i);
       
     }
     osc.connect(context.destination);
