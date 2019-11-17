@@ -51,24 +51,28 @@ class App extends React.Component<{}, State> {
     //create an array of eight random frequencies
     let midiNotes = new Array(8);
     for (var i = 0; i < 8; i++) {
-      //generate MIDI number between 36 & 84 (C2 thru C6)
-      midiNotes[i] = Math.floor(Math.random() * 84) + 36;
+      //generate MIDI number between 36 & 72 (C2 thru C6)
+      midiNotes[i] = Math.floor(Math.random() * (72 - 36 + 1) + 36);
     }
-
+    console.log("getMidi" + midiNotes);
     return midiNotes;
   };
 
-  playMidi = (midiNotes: number[]) => {
-    let output = webmidi.outputs[0];
-    console.log(output);
-    console.log("Play Midi");
-    output.playNote("C4");
-    //for (var i = 0; i < midiNotes.length; i++) {
-    //  // Change this to have a delay and duration
-    //  console.log(midiNotes[i]);
-    //  output.playNote("C4");
-    //}
-  };
+  playMidi = (midi: number[]) => {
+    console.log("Playmidi" + midi);
+
+    let context = new AudioContext();
+    let osc = context.createOscillator();
+    
+    for (var i = 0; i < midi.length; i++) {
+      //change to frequency
+      osc.frequency.setValueAtTime(Math.pow(2, (midi[i]-69)/12) * 440, context.currentTime + i);
+    }
+    osc.connect(context.destination);
+    osc.start();
+    osc.stop(context.currentTime + midi.length);
+    
+    };
 
   handlePlayClick: any = () => {
     let midiNotes = this.generateMidi();
