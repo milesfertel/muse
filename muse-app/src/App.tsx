@@ -3,7 +3,15 @@ import logo from './logo.svg';
 import './App.css';
 
 const App: React.FC = () => {
-  const playTune = (() => {
+  const generateMidi = (() => {
+    return;
+  });
+
+  const playMidi = (() => {
+    return;
+  });
+
+  const handlePlayClick  = (() => {
     console.log("helloooooo");
   });
 
@@ -15,7 +23,7 @@ const App: React.FC = () => {
           Welcome to Muse!
         </p>
 
-      <button onClick={playTune}>Play a tune</button>
+      <button onClick={handlePlayClick}>Play a tune</button>
       </header>
     </div>
   );
