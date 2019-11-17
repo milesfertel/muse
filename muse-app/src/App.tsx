@@ -51,22 +51,22 @@ class App extends React.Component<{}, State> {
     //create an array of eight random frequencies
     let midiNotes = new Array(8);
     for (var i = 0; i < 8; i++) {
-      //generate MIDI number between 36 & 72 (C2 thru C6)
-      midiNotes[i] = Math.floor(Math.random() * (72 - 36 + 1) + 36);
+      //generate MIDI number between 48 & 84 (C2 thru C6)
+      midiNotes[i] = Math.floor(Math.random() * (84 - 48 + 1) + 48);
     }
-    console.log("getMidi" + midiNotes);
     return midiNotes;
   };
 
   playMidi = (midi: number[]) => {
-    console.log("Playmidi" + midi);
 
     let context = new AudioContext();
     let osc = context.createOscillator();
     
     for (var i = 0; i < midi.length; i++) {
-      //change to frequency
+      //change MIDI note to frequency
+      console.log(Math.pow(2, (midi[i]-69)/12) * 440);
       osc.frequency.setValueAtTime(Math.pow(2, (midi[i]-69)/12) * 440, context.currentTime + i);
+      
     }
     osc.connect(context.destination);
     osc.start();
@@ -79,8 +79,9 @@ class App extends React.Component<{}, State> {
     this.setState({
       gameMode: Mode.PLAY,
       midi: midiNotes,
+    }, () => {
+      this.playMidi(this.state.midi);
     });
-    this.playMidi(this.state.midi);
   };
 
   render() {
