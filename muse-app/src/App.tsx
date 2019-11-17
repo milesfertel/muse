@@ -44,19 +44,64 @@ const App: React.FC = () => {
     console.log("helloooooo");
     playMidi();
   });
+enum Mode {
+  WAIT,
+  LISTEN,
+  PLAY,
+  FAIL,
+  SUCCEED
+};
 
+interface Props {
+  handleClick: any;
+};
+
+interface State {
+  gameMode: Mode;
+  midi: number[];
+  noteCounter: number;
+};
+
+const PlayButton: React.FC<Props> = (props) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Welcome to Muse!
-        </p>
-
-      <button onClick={handlePlayClick}>Play a tune</button>
-      </header>
-    </div>
+    <button onClick={props.handleClick}>
+      Play a tune
+    </button>
   );
+};
+
+class App extends React.Component<{}, State> {
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      gameMode: Mode.WAIT,
+      midi: [],
+      noteCounter: 0,
+    };
+  }
+
+  handlePlayClick: any = () => {
+    let midiNotes = this.generateMidi();
+    this.setState({
+      gameMode: Mode.PLAY,
+      midi: midiNotes,
+    });
+    this.playMidi(this.state.midi);
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Welcome to Muse!
+          </p>
+          <PlayButton handleClick={this.handlePlayClick}></PlayButton>
+        </header>
+      </div>
+    );
+  }
 }
 
 export default App;
