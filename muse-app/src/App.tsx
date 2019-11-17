@@ -28,7 +28,7 @@ const PlayButton: React.FC<Props> = (props) => {
   );
 };
 
-class App extends React.Component {
+class App extends React.Component<{}, State> {
   constructor(props: any) {
     super(props)
     this.state = {
@@ -42,13 +42,18 @@ class App extends React.Component {
     return [];
   };
 
-  playMidi = () => {
+  playMidi = (midiNotes: number[]) => {
+    console.log(midiNotes);
     return;
   };
 
   handlePlayClick: any = () => {
-    console.log("hellooooo");
-    return;
+    let midiNotes = this.generateMidi();
+    this.setState({
+      gameMode: Mode.PLAY,
+      midi: midiNotes,
+    });
+    this.playMidi(this.state.midi);
   };
 
   render() {
